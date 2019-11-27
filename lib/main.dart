@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
                       width: double.infinity,
                       color: Colors.black26,
                       child: Text(
-                        "FILTER",
+                        "filter",
                         style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                     ),
