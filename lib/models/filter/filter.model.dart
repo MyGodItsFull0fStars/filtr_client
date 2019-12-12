@@ -1,15 +1,13 @@
 import 'dart:convert';
 
+import 'package:filter_client/models/filter/filter_settings.model.dart';
+
 class Filter{
   String name;
   String imgURL = "";
-  List filterSettings = new List<Object>();
+  List filterSettings = new List<FilterSetting>();
 
   Filter(this.name, this.imgURL);
-
-  Filter.json(String json){
-
-  }
 
   /*Filter.fromJson(Map<String, dynamic> json) : name = json['name'], imgURL = json['imgURL'];
 

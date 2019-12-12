@@ -1,4 +1,5 @@
-
+import 'package:filter_client/models/filter/filter.model.dart';
+import 'package:filter_client/models/filter/filter_settings.model.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -13,72 +14,84 @@ class MyApp extends StatelessWidget {
           title: Text('Filtr'),
         ),
         body: Center(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Container(
-                      color: Colors.amber,
-                      
-                ),
+            child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                color: Colors.amber,
               ),
-              Container(
+            ),
+            Container(
                 child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: 20,
-                      width: double.infinity,
-                      color: Colors.black26,
-                      child: Text(
-                        "filter",
-                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                        ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(10),
-                      child: SingleChildScrollView(
+              children: <Widget>[
+                Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: Colors.black26,
+                  child: Text(
+                    "filter",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                ),
+                Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
-                        child: Row(
-                    children: <Widget>[
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),
-                      FilterCard(),                    
-                    ],
-                  )
-                )
-              )
-                  ],
-                )
-              ),
-            ],
-          )
-        ),
+                        child: Padding(
+                            padding: EdgeInsets.only(left: 10, right: 10),
+                            child: Row(
+                              children: <Widget>[
+                                FilterCard(),
+                                FilterCard(),
+                                FilterCard(),
+                                FilterCard(),
+                                FilterCard(),
+                              ],
+                            ))))
+              ],
+            )),
+          ],
+        )),
       ),
     );
   }
 }
 
-class FilterCard extends StatelessWidget{
+class FilterCard extends StatefulWidget {
+  @override
+  _FilterCardState createState() => _FilterCardState();
+}
 
-Widget build(BuildContext context){
-  return Card(
-    child: GestureDetector(
-      child: Container(
-      child: Text("Card 3"),
-        height: 150,
-        width: 150,
-      ),
-      onTap: () => {
-Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text("Card touched"),
-    ))
-      },
-    )
-  );
+class _FilterCardState extends State<FilterCard> {
+  bool touched = false;
+
+  Widget build(BuildContext context) {
+    return Column(
+      children:[
+      Card(
+          child: GestureDetector(
+              child: Container(
+                child: Text("Test"),
+                height: 150,
+                width: 150,
+              ),
+              onTap: () => {tapCard()})),
+      Container(
+        child: Text("Test"),
+      )
+      ]
+    );
+  }
+
+  void tapCard() {
+    setState(() {
+      !touched ? touched = true : touched = false;
+    });
+
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(this.touched ? "Erscheinen" : "Verschwinden"),
+      duration: new Duration(milliseconds: 300),
+    ));
   }
 }
