@@ -3,22 +3,41 @@ import 'dart:convert';
 import 'package:filter_client/models/filter/filter_settings.model.dart';
 
 class Filter{
-  String name;
-  String imgURL = "";
-  List filterSettings = new List<FilterSetting>();
+  String _name;
+  String _imgURL = "";
+  List _filterSettings = [];
 
-  Filter(this.name, this.imgURL);
+  String get name => _name;
+  String get imgUrl => _imgURL;
+  List<FilterSetting> get filterSettings => _filterSettings;
 
-  /*Filter.fromJson(Map<String, dynamic> json) : name = json['name'], imgURL = json['imgURL'];
-
-  Filter getFilterFromJson(String json){
-    Map filterMap = jsonDecode(json);
-    return Filter.fromJson(filterMap);
+  Filter.fromJson(Map<String, dynamic> parsedJson){
+    _name = parsedJson["name"];
+    _imgURL = parsedJson["imgUrl"];
+    List<FilterSetting> temp = [];
+    for(int i = 0; i < parsedJson["filterSettings"].length; i++){
+        FilterSetting filterSettings = parseFilterSettings(json.decode(parsedJson["filterSettings"][i]));
+        temp.add(filterSettings);
+    }
+    _filterSettings = temp;
   }
-  
-  Code:
-  Map filterMap = jsonDecode(jsonString);
-  var filter = Filter.fromJson(filterMap);
-  */
 
+  FilterSetting parseFilterSettings(Map<String, dynamic> parsedJson){
+    FilterSetting fs;
+
+    //Type #1: FilterSettingCheckbox
+    //Type #2: 
+    switch (parsedJson["type"]) {
+      case 1:
+        fs = new FilterSettingCheckbox(
+                  1, 
+                  parsedJson["name"], 
+                  parsedJson["checked"] == "true" ? true : false
+                  );
+        break;
+      default:
+    }
+
+    return fs;
+  }
 }

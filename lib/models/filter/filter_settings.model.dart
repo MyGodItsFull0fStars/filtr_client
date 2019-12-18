@@ -12,6 +12,7 @@ class FilterSetting{
   String name;
 
   FilterSetting(this.id, this.name);
+
 }
 
 class FilterSettingSlider extends FilterSetting{
