@@ -13,3 +13,9 @@ class FetchFilter extends FilterEvent{
   List<Object> get props => [];
 }
 
+class GetFilter extends FilterEvent{
+  const GetFilter();
+
+  @override
+  List<Object> get props => [];
+}

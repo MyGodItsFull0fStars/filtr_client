@@ -18,7 +18,7 @@ class FiltersLoadedState extends FilterState {
   final List<Filter> filters;
 
   const FiltersLoadedState({@required this.filters}) 
-    : assert(filters != null);
+    : assert(true);
 
   @override
   List<Object> get props => [filters];

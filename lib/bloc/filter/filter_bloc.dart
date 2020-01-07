@@ -7,6 +7,8 @@ import '../bloc.dart';
 
 class FilterBloc extends Bloc<FilterEvent, FilterState> {
   final FilterRepository filterRepository;
+  bool filterSettingsVisible = false;
+  int selectedFilterIndex = 0;
 
   FilterBloc({@required this.filterRepository}) 
     : assert(filterRepository != null);
@@ -21,7 +23,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
      if (event is FetchFilter) {
       yield FiltersLoadingState();
       try {
-        final List<Filter> filters = filterRepository.getFilters();
+        final List<Filter> filters = null; //filterRepository.getFilters();
         yield FiltersLoadedState(filters: filters);
       } catch (_) {
         yield FiltersErrorState();
