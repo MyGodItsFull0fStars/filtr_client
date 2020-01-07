@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:filter_client/bloc/bloc.dart';
 import 'package:filter_client/repositories/filter_repository.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
+
+import 'repositories/image_repository.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -24,8 +27,10 @@ void main() {
 
 class FilterApp extends StatelessWidget {
   final FilterRepository filterRepository;
+  final ImageRepository imageRepository;
+  final CameraDescription camera;
 
-  FilterApp({Key key, @required this.filterRepository})
+  FilterApp({Key key, @required this.filterRepository, @required this.imageRepository, @required this.camera})
       : assert(filterRepository != null),
         super(key: key);
 
@@ -89,9 +94,49 @@ class FilterView extends StatelessWidget {
         body: Center(
             child: Column(
           children: <Widget>[
+            Container(
+              
+            ),
             Expanded(
-              child: Container(
-                color: Colors.amber,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.add),
+                      onPressed: () {
+                        //do something
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.folder_open),
+                      onPressed: () {
+                        //do something
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.file_upload),
+                      onPressed: () {
+                        //do something
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.0),
+                    child: FloatingActionButton(
+                      child: Icon(Icons.save_alt),
+                      onPressed: () {
+                        //do something
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
@@ -141,7 +186,6 @@ class FilterView extends StatelessWidget {
                                       FilterCard(),
                                       FilterCard(),*/
                                       //BlocProvider.of<FilterBloc>(context).add(GetFilter());
-                                      
                                     ],
                                   )),
                                   BlocProvider.of<FilterBloc>(context).filterSettingsVisible == true ? Text("Visible") : Text("Invisible")
@@ -172,4 +216,11 @@ class FilterView extends StatelessWidget {
 
 /*
 
-  */
+*/
+class ImageView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+}
