@@ -17,12 +17,22 @@ class SimpleBlocDelegate extends BlocDelegate {
   }
 }
 
-void main() {
+Future<void> main() async {
   BlocSupervisor.delegate = SimpleBlocDelegate();
 
   final FilterRepository filterRepository = FilterRepository();
+  final ImageRepository imageRepository = ImageRepository();
 
-  runApp(FilterApp(filterRepository: filterRepository));
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
+
+  runApp(FilterApp(
+    filterRepository: filterRepository,
+    imageRepository: imageRepository,
+    camera: firstCamera,
+  ));
 }
 
 class FilterApp extends StatelessWidget {
@@ -30,19 +40,32 @@ class FilterApp extends StatelessWidget {
   final ImageRepository imageRepository;
   final CameraDescription camera;
 
-  FilterApp({Key key, @required this.filterRepository, @required this.imageRepository, @required this.camera})
+  FilterApp(
+      {Key key,
+      @required this.filterRepository,
+      @required this.imageRepository,
+      @required this.camera})
       : assert(filterRepository != null),
+        assert(imageRepository != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Weather',
-      home: BlocProvider(
-        create: (context) => FilterBloc(filterRepository: filterRepository),
-        child: FilterView(),
-      ),
-    );
+        title: 'Flutter Weather',
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider<FilterBloc>(
+              create: (BuildContext context) =>
+                  FilterBloc(filterRepository: filterRepository),
+            ),
+            BlocProvider<ImageBloc>(
+              create: (BuildContext context) =>
+                  ImageBloc(imageRepository: imageRepository),
+            ),
+          ],
+          child: FilterView(),
+        ));
   }
 }
 
@@ -94,18 +117,39 @@ class FilterView extends StatelessWidget {
         body: Center(
             child: Column(
           children: <Widget>[
-            Container(
-              
-            ),
+            BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
+              if (state is InitialImageState) {
+                return Text("Choose an Image");
+              } else if (state is ImageLoadingState) {
+                return Text("Image loading");
+              } else if (state is ImageLoadedState) {
+                return Center(
+                  child: state.image == null
+                      ? Text("No Image")
+                      : Image(image: FileImage(state.image)),
+                );
+              } else if (state is CameraStartState) {
+                return Text("Camera Loading");
+              } else if (state is CameraShowState) {
+                return SizedBox(
+                  width: 200.0,
+                  height: 300.0,
+                  child: CameraPreview(state.controller),
+                );
+              } else {
+                return Text("No Image");
+              }
+            }),
             Expanded(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: FloatingActionButton(
                       child: Icon(Icons.add),
                       onPressed: () {
-                        //do something
+                        BlocProvider.of<ImageBloc>(context).add(OpenCamera());
                       },
                     ),
                   ),
@@ -114,7 +158,7 @@ class FilterView extends StatelessWidget {
                     child: FloatingActionButton(
                       child: Icon(Icons.folder_open),
                       onPressed: () {
-                        //do something
+                        BlocProvider.of<ImageBloc>(context).add(LoadImage());
                       },
                     ),
                   ),
@@ -174,33 +218,37 @@ class FilterView extends StatelessWidget {
                           padding: EdgeInsets.only(top: 10, bottom: 10),
                           child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
-                              child: Column(
-                                children: <Widget>[
+                              child: Column(children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.only(left: 10, right: 10),
-                                  child: Row(
-                                    children: <Widget>[
-                                      /*FilterCard(),
+                                    padding:
+                                        EdgeInsets.only(left: 10, right: 10),
+                                    child: Row(
+                                      children: <Widget>[
+                                        /*FilterCard(),
                                       FilterCard(),
                                       FilterCard(),
                                       FilterCard(),
                                       FilterCard(),*/
-                                      //BlocProvider.of<FilterBloc>(context).add(GetFilter());
-                                    ],
-                                  )),
-                                  BlocProvider.of<FilterBloc>(context).filterSettingsVisible == true ? Text("Visible") : Text("Invisible")
-                                  ])));
+                                        //BlocProvider.of<FilterBloc>(context).add(GetFilter());
+                                      ],
+                                    )),
+                                BlocProvider.of<FilterBloc>(context)
+                                            .filterSettingsVisible ==
+                                        true
+                                    ? Text("Visible")
+                                    : Text("Invisible")
+                              ])));
                     } else {
                       return Padding(
                           padding: EdgeInsets.only(top: 40.0, bottom: 40.0),
                           child: Column(children: <Widget>[
                             Text("Fehler beim Laden der Filter!"),
                             RaisedButton(
-                              child: Text("Erneut versuchen"),
-                              onPressed: () async {
-                              BlocProvider.of<FilterBloc>(context)
-                                  .add(FetchFilter());
-                            })
+                                child: Text("Erneut versuchen"),
+                                onPressed: () async {
+                                  BlocProvider.of<FilterBloc>(context)
+                                      .add(FetchFilter());
+                                })
                           ]));
                     }
                   },
