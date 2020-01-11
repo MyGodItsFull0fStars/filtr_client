@@ -16,12 +16,14 @@ class FiltersLoadingState extends FilterState {}
 
 class FiltersLoadedState extends FilterState {
   final List<Filter> filters;
+  final bool filterSettingsVisible;
+  final int selectedFilterIndex;
 
-  const FiltersLoadedState({@required this.filters}) 
-    : assert(true);
+  const FiltersLoadedState({@required this.filters, this.filterSettingsVisible, this.selectedFilterIndex}) 
+    : assert(filters != null);
 
   @override
-  List<Object> get props => [filters];
+  List<Object> get props => [filters, filterSettingsVisible, selectedFilterIndex];
 }
 
 class FiltersErrorState extends FilterState {}

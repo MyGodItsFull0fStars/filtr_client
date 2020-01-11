@@ -5,7 +5,9 @@ import 'package:filter_client/models/filter/filter_settings.model.dart';
 class Filter{
   String _name;
   String _imgURL = "";
-  List _filterSettings = [];
+  List<FilterSetting> _filterSettings = [];
+
+  Filter(this._name, this._imgURL);
 
   String get name => _name;
   String get imgUrl => _imgURL;
