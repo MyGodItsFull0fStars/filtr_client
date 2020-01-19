@@ -144,15 +144,31 @@ class FilterView extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: FloatingActionButton(
-                      child: Icon(Icons.add),
-                      onPressed: () {
-                        BlocProvider.of<ImageBloc>(context).add(OpenCamera());
-                      },
-                    ),
-                  ),
+                  BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
+                    if (state is CameraShowState) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.0),
+                        child: FloatingActionButton(
+                          child: Icon(Icons.camera),
+                          onPressed: () {
+                            BlocProvider.of<ImageBloc>(context)
+                                .add(TakePhoto());
+                          },
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 5.0),
+                        child: FloatingActionButton(
+                          child: Icon(Icons.add),
+                          onPressed: () {
+                            BlocProvider.of<ImageBloc>(context)
+                                .add(OpenCamera());
+                          },
+                        ),
+                      );
+                    }
+                  }),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.0),
                     child: FloatingActionButton(

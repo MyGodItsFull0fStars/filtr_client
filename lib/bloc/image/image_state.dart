@@ -22,6 +22,8 @@ class CameraShowState extends ImageState {
   const CameraShowState(@required this.controller);
 }
 
+class CameraTakePhotoState extends ImageState{}
+
 class ImageLoadingState extends ImageState {}
 
 class ImageLoadedState extends ImageState {

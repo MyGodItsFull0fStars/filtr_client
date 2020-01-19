@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' show join;
+import 'package:path_provider/path_provider.dart';
 
 class ImageRepository {
   ImageRepository();
@@ -10,8 +12,13 @@ class ImageRepository {
   CameraController _controller;
   CameraDescription _camera;
 
-  Image openCamera() {
-    return null;
+  Future<String> takePhoto() async {
+    final path = join(
+      (await getTemporaryDirectory()).path,
+      '${DateTime.now()}.png',
+    );
+    await _controller.takePicture(path);
+    return path;
   }
 
   Future<File> getImage() async {
@@ -30,7 +37,7 @@ class ImageRepository {
     return _controller.initialize();
   }
 
-  CameraController getController(){
+  CameraController getController() {
     return _controller;
   }
 }

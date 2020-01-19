@@ -13,6 +13,13 @@ class OpenCamera extends ImageEvent{
   List<Object> get props => [];
 }
 
+class TakePhoto extends ImageEvent {
+  const TakePhoto();
+
+  @override
+  List<Object> get props => null;  
+}
+
 class LoadImage extends ImageEvent{
   const LoadImage();
 

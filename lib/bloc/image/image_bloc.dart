@@ -10,8 +10,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   final ImageRepository imageRepository;
   File img;
 
-  ImageBloc({@required this.imageRepository}) 
-    : assert(imageRepository != null);
+  ImageBloc({@required this.imageRepository}) : assert(imageRepository != null);
 
   @override
   ImageState get initialState => InitialImageState();
@@ -20,20 +19,27 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   Stream<ImageState> mapEventToState(
     ImageEvent event,
   ) async* {
-     if (event is OpenCamera) {
+    if (event is OpenCamera) {
       yield CameraStartState();
       try {
         await imageRepository.initCamera();
         yield CameraShowState(imageRepository.getController());
-        
       } catch (_) {
         yield ImageErrorState();
       }
-    }
-    else if(event is LoadImage){
+    } else if (event is LoadImage) {
       yield ImageLoadingState();
       try {
         img = await imageRepository.getImage();
+        yield ImageLoadedState(image: img);
+      } catch (_) {
+        yield ImageErrorState();
+      }
+    } else if (event is TakePhoto) {
+      yield CameraTakePhotoState();
+      try {
+        String path = await imageRepository.takePhoto();
+        img = File(path);
         yield ImageLoadedState(image: img);
       } catch (_) {
         yield ImageErrorState();
