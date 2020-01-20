@@ -6,9 +6,32 @@ abstract class ImageEvent extends Equatable {
   const ImageEvent();
 }
 
-class FetchImage extends ImageEvent{
-  const FetchImage();
+class OpenCamera extends ImageEvent{
+  const OpenCamera();
 
   @override
   List<Object> get props => [];
+}
+
+class TakePhoto extends ImageEvent {
+  const TakePhoto();
+
+  @override
+  List<Object> get props => null;  
+}
+
+class LoadImage extends ImageEvent{
+  const LoadImage();
+
+  @override
+  List<Object> get props => [];
+
+}
+
+class SendImage extends ImageEvent{
+const SendImage();
+
+  @override
+  List<Object> get props => null;
+
 }

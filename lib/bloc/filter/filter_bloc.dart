@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:filter_client/models/filter/filter.model.dart';
 import 'package:filter_client/models/filter/filter_settings.model.dart';
@@ -34,8 +33,6 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         FilterSetting fs2 = new FilterSettingCheckbox(2, "Checkbox 2", false);
         FilterSetting fs3 = new FilterSettingCheckbox(1, "Checkbox 1", false);
         FilterSetting fs4 = new FilterSettingCheckbox(2, "Checkbox 2", true);
-        FilterSetting fs5 = new FilterSettingCheckbox(1, "Checkbox 1", true);
-        FilterSetting fs6 = new FilterSettingCheckbox(2, "Checkbox 2", false);
         FilterSetting fs7 = new FilterSettingSlider(1, "Slider", "", "", 0, 10, 1, 1);
         FilterSetting fs8 = new FilterSettingSlider(1, "Slider", "", "", 0, 10, 1, 1);
 
