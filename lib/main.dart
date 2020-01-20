@@ -82,7 +82,11 @@ class FilterView extends StatelessWidget {
         body: Center(
             child: Stack(
           children: <Widget>[
-            Container(child: Column(children: <Widget>[
+            Container(
+                child: Column(children: <Widget>[
+              SizedBox(
+                height: 20,
+              ),
               BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
                 if (state is InitialImageState) {
                   return Text("Choose an Image");
@@ -99,16 +103,18 @@ class FilterView extends StatelessWidget {
                 } else if (state is CameraStartState) {
                   return Text("Camera Loading");
                 } else if (state is CameraShowState) {
-                  return SizedBox(
-                    width: 200.0,
-                    height: 300.0,
-                    child: CameraPreview(state.controller),
-                  );
+                  return Container(
+                      height: 300,
+                      child: AspectRatio(
+                        aspectRatio: state.controller.value.aspectRatio,
+                        child: CameraPreview(state.controller),
+                      ));
                 } else {
                   return Text("No Image");
                 }
               }),
-              Expanded(
+              Padding(
+                padding: EdgeInsets.only(top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -171,128 +177,146 @@ class FilterView extends StatelessWidget {
             ])),
             Positioned(
                 bottom: 0,
-                left: 0, 
+                left: 0,
                 right: 0,
                 child: Column(
-              children: <Widget>[
-                Container(
-                    width: double.infinity,
-                    color: Colors.black26,
-                    child: Padding(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        "Filter",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.white),
-                      ),
-                    )),
-                BlocBuilder<FilterBloc, FilterState>(
-                  builder: (context, state) {
-                    if (state is InitialFiltersState) {
-                      return RaisedButton(onPressed: () async {
-                        BlocProvider.of<FilterBloc>(context).add(FetchFilter());
-                      });
-                    } else if (state is FiltersLoadingState) {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 40.0, bottom: 40.0),
-                          child: Column(children: <Widget>[
-                            Text("Filter werden geladen"),
-                            Loading(
-                                indicator: BallPulseIndicator(),
-                                size: 20.0,
-                                color: Colors.grey)
-                          ]));
-                    } else if (state is FiltersLoadedState) {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 10),
-                          child: Column(
-                            children: <Widget>[
-                              state.filters.length > 0
-                                  ? Container(
-                                      height: 184,
-                                      color: Colors.white,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: state.filters.length,
-                                        itemBuilder: (context, index) {
-                                          final filter = state.filters[index];
-                                          return Column(children: <Widget>[
-                                            Card(
-                                                child: GestureDetector(
-                                                    child: Container(
-                                                      child: Image.network(
-                                                          filter.imgUrl),
-                                                      height: 150,
-                                                      width: 150,
-                                                    ),
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  FilterBloc>(
-                                                              context)
-                                                          .add(SelectFilter(
-                                                              index: index));
-                                                    })),
-                                            Container(
-                                              height: 20,
-                                              child: Text(filter.name),
-                                            )
-                                          ]);
-                                        },
-                                      ))
-                                  : Text("Keine Filter vorhanden!"),
+                  children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        color: Colors.black26,
+                        child: Padding(
+                          padding: EdgeInsets.all(5.0),
+                          child: Text(
+                            "Filter",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        )),
+                    Container(
+                      color: Colors.white,
+                      child: BlocBuilder<FilterBloc, FilterState>(
+                        builder: (context, state) {
+                          if (state is InitialFiltersState) {
+                            return RaisedButton(onPressed: () async {
                               BlocProvider.of<FilterBloc>(context)
-                                          .filterSettingsVisible ==
-                                      true
-                                  ? Column(
-                                      children: <Widget>[
-                                        state.filters[state.selectedFilterIndex]
-                                                    .filterSettings.length >
-                                                0
-                                            ? ListView.builder(
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                itemCount: state
-                                                    .filters[state
-                                                        .selectedFilterIndex]
-                                                    .filterSettings
-                                                    .length,
-                                                itemBuilder: (context, index) {
-                                                  final filterSetting = state
-                                                      .filters[state
-                                                          .selectedFilterIndex]
-                                                      .filterSettings[index];
-                                                  return Card(
-                                                      child: FilterSetting
-                                                          .buildFilterSettingWidget(
-                                                              filterSetting,
-                                                              BlocProvider.of<
-                                                                      FilterBloc>(
-                                                                  context)));
-                                                })
-                                            : Text(
-                                                "Keine Filtersettings vorhanden!"),
-                                      ],
-                                    )
-                                  : Container()
-                            ],
-                          ));
-                    } else {
-                      return Padding(
-                          padding: EdgeInsets.only(top: 40.0, bottom: 40.0),
-                          child: Column(children: <Widget>[
-                            Text("Fehler beim Laden der Filter!"),
-                            RaisedButton(
-                                child: Text("Erneut versuchen"),
-                                onPressed: () async {
-                                  BlocProvider.of<FilterBloc>(context)
-                                      .add(FetchFilter());
-                                })
-                          ]));
-                    }
-                  },
-                ),
-              ],
-            )),
+                                  .add(FetchFilter());
+                            });
+                          } else if (state is FiltersLoadingState) {
+                            return Padding(
+                                padding:
+                                    EdgeInsets.only(top: 40.0, bottom: 40.0),
+                                child: Column(children: <Widget>[
+                                  Text("Filter werden geladen"),
+                                  Loading(
+                                      indicator: BallPulseIndicator(),
+                                      size: 20.0,
+                                      color: Colors.grey)
+                                ]));
+                          } else if (state is FiltersLoadedState) {
+                            return Padding(
+                                padding: EdgeInsets.only(top: 10, bottom: 10),
+                                child: Column(
+                                  children: <Widget>[
+                                    state.filters.length > 0
+                                        ? Container(
+                                            height: 184,
+                                            color: Colors.white,
+                                            child: ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: state.filters.length,
+                                              itemBuilder: (context, index) {
+                                                final filter =
+                                                    state.filters[index];
+                                                return Column(
+                                                    children: <Widget>[
+                                                      Card(
+                                                          child:
+                                                              GestureDetector(
+                                                                  child:
+                                                                      Container(
+                                                                    child: Image
+                                                                        .network(
+                                                                            filter.imgUrl),
+                                                                    height: 150,
+                                                                    width: 150,
+                                                                  ),
+                                                                  onTap: () {
+                                                                    BlocProvider.of<FilterBloc>(
+                                                                            context)
+                                                                        .add(SelectFilter(
+                                                                            index:
+                                                                                index));
+                                                                  })),
+                                                      Container(
+                                                        height: 20,
+                                                        child:
+                                                            Text(filter.name),
+                                                      )
+                                                    ]);
+                                              },
+                                            ))
+                                        : Text("Keine Filter vorhanden!"),
+                                    BlocProvider.of<FilterBloc>(context)
+                                                .filterSettingsVisible ==
+                                            true
+                                        ? Column(
+                                            children: <Widget>[
+                                              state
+                                                          .filters[state
+                                                              .selectedFilterIndex]
+                                                          .filterSettings
+                                                          .length >
+                                                      0
+                                                  ? ListView.builder(
+                                                      shrinkWrap: true,
+                                                      scrollDirection:
+                                                          Axis.vertical,
+                                                      itemCount: state
+                                                          .filters[state
+                                                              .selectedFilterIndex]
+                                                          .filterSettings
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, index) {
+                                                        final filterSetting = state
+                                                            .filters[state
+                                                                .selectedFilterIndex]
+                                                            .filterSettings[index];
+                                                        return Card(
+                                                            child: FilterSetting
+                                                                .buildFilterSettingWidget(
+                                                                    filterSetting,
+                                                                    BlocProvider.of<
+                                                                            FilterBloc>(
+                                                                        context)));
+                                                      })
+                                                  : Text(
+                                                      "Keine Filtersettings vorhanden!"),
+                                            ],
+                                          )
+                                        : Container()
+                                  ],
+                                ));
+                          } else {
+                            return Padding(
+                                padding:
+                                    EdgeInsets.only(top: 40.0, bottom: 40.0),
+                                child: Column(children: <Widget>[
+                                  Text("Fehler beim Laden der Filter!"),
+                                  RaisedButton(
+                                      child: Text("Erneut versuchen"),
+                                      onPressed: () async {
+                                        BlocProvider.of<FilterBloc>(context)
+                                            .add(FetchFilter());
+                                      })
+                                ]));
+                          }
+                        },
+                      ),
+                    )
+                  ],
+                )),
           ],
         )),
       ),
