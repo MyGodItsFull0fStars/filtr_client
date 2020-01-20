@@ -70,7 +70,6 @@ class FilterApp extends StatelessWidget {
   }
 }
 
-
 class FilterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -81,91 +80,99 @@ class FilterView extends StatelessWidget {
           title: Text('Filtr'),
         ),
         body: Center(
-            child: Column(
+            child: Stack(
           children: <Widget>[
-            BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
-              if (state is InitialImageState) {
-                return Text("Choose an Image");
-              } else if (state is ImageLoadingState) {
-                return Text("Image loading");
-              } else if (state is ImageLoadedState) {
-                return Center(
-                  child: state.image == null
-                      ? Text("No Image")
-                      : Image(image: FileImage(state.image)),
-                );
-              } else if (state is CameraStartState) {
-                return Text("Camera Loading");
-              } else if (state is CameraShowState) {
-                return SizedBox(
-                  width: 200.0,
-                  height: 300.0,
-                  child: CameraPreview(state.controller),
-                );
-              } else {
-                return Text("No Image");
-              }
-            }),
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
-                    if (state is CameraShowState) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.0),
-                        child: FloatingActionButton(
-                          child: Icon(Icons.camera),
-                          onPressed: () {
-                            BlocProvider.of<ImageBloc>(context)
-                                .add(TakePhoto());
-                          },
-                        ),
-                      );
-                    } else {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 5.0),
-                        child: FloatingActionButton(
-                          child: Icon(Icons.add),
-                          onPressed: () {
-                            BlocProvider.of<ImageBloc>(context)
-                                .add(OpenCamera());
-                          },
-                        ),
-                      );
-                    }
-                  }),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: FloatingActionButton(
-                      child: Icon(Icons.folder_open),
-                      onPressed: () {
-                        BlocProvider.of<ImageBloc>(context).add(LoadImage());
-                      },
+            Container(child: Column(children: <Widget>[
+              BlocBuilder<ImageBloc, ImageState>(builder: (context, state) {
+                if (state is InitialImageState) {
+                  return Text("Choose an Image");
+                } else if (state is ImageLoadingState) {
+                  return Text("Image loading");
+                } else if (state is ImageLoadedState) {
+                  return Center(
+                    child: state.image == null
+                        ? Text("No Image")
+                        : SizedBox(
+                            height: 300,
+                            child: Image(image: FileImage(state.image))),
+                  );
+                } else if (state is CameraStartState) {
+                  return Text("Camera Loading");
+                } else if (state is CameraShowState) {
+                  return SizedBox(
+                    width: 200.0,
+                    height: 300.0,
+                    child: CameraPreview(state.controller),
+                  );
+                } else {
+                  return Text("No Image");
+                }
+              }),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    BlocBuilder<ImageBloc, ImageState>(
+                        builder: (context, state) {
+                      if (state is CameraShowState) {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: FloatingActionButton(
+                            child: Icon(Icons.camera),
+                            onPressed: () {
+                              BlocProvider.of<ImageBloc>(context)
+                                  .add(TakePhoto());
+                            },
+                          ),
+                        );
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.0),
+                          child: FloatingActionButton(
+                            child: Icon(Icons.add),
+                            onPressed: () {
+                              BlocProvider.of<ImageBloc>(context)
+                                  .add(OpenCamera());
+                            },
+                          ),
+                        );
+                      }
+                    }),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: FloatingActionButton(
+                        child: Icon(Icons.folder_open),
+                        onPressed: () {
+                          BlocProvider.of<ImageBloc>(context).add(LoadImage());
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: FloatingActionButton(
-                      child: Icon(Icons.file_upload),
-                      onPressed: () {
-                        //do something
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: FloatingActionButton(
+                        child: Icon(Icons.file_upload),
+                        onPressed: () {
+                          //do something
+                        },
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.0),
-                    child: FloatingActionButton(
-                      child: Icon(Icons.save_alt),
-                      onPressed: () {
-                        //do something
-                      },
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.0),
+                      child: FloatingActionButton(
+                        child: Icon(Icons.save_alt),
+                        onPressed: () {
+                          //do something
+                        },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
+                  ],
+                ),
+              )
+            ])),
+            Positioned(
+                bottom: 0,
+                left: 0, 
+                right: 0,
                 child: Column(
               children: <Widget>[
                 Container(
@@ -200,38 +207,39 @@ class FilterView extends StatelessWidget {
                           padding: EdgeInsets.only(top: 10, bottom: 10),
                           child: Column(
                             children: <Widget>[
-                              state.filters.length > 0 ? 
-                              SizedBox(
-                                  height: 184,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: state.filters.length,
-                                    itemBuilder: (context, index) {
-                                      final filter = state.filters[index];
-                                      return Column(children: <Widget>[
-                                        Card(
-                                            child: GestureDetector(
-                                                child: Container(
-                                                  child: Image.network(
-                                                      filter.imgUrl),
-                                                  height: 150,
-                                                  width: 150,
-                                                ),
-                                                onTap: () {
+                              state.filters.length > 0
+                                  ? Container(
+                                      height: 184,
+                                      color: Colors.white,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.filters.length,
+                                        itemBuilder: (context, index) {
+                                          final filter = state.filters[index];
+                                          return Column(children: <Widget>[
+                                            Card(
+                                                child: GestureDetector(
+                                                    child: Container(
+                                                      child: Image.network(
+                                                          filter.imgUrl),
+                                                      height: 150,
+                                                      width: 150,
+                                                    ),
+                                                    onTap: () {
                                                       BlocProvider.of<
                                                                   FilterBloc>(
                                                               context)
                                                           .add(SelectFilter(
                                                               index: index));
                                                     })),
-                                        Container(
-                                          height: 20,
-                                          child: Text(filter.name),
-                                        )
-                                      ]);
-                                    },
-                                  ) 
-                                  ) : Text("Keine Filter vorhanden!"),
+                                            Container(
+                                              height: 20,
+                                              child: Text(filter.name),
+                                            )
+                                          ]);
+                                        },
+                                      ))
+                                  : Text("Keine Filter vorhanden!"),
                               BlocProvider.of<FilterBloc>(context)
                                           .filterSettingsVisible ==
                                       true
@@ -243,14 +251,26 @@ class FilterView extends StatelessWidget {
                                             ? ListView.builder(
                                                 shrinkWrap: true,
                                                 scrollDirection: Axis.vertical,
-                                                itemCount: state.filters[state.selectedFilterIndex].filterSettings.length,
+                                                itemCount: state
+                                                    .filters[state
+                                                        .selectedFilterIndex]
+                                                    .filterSettings
+                                                    .length,
                                                 itemBuilder: (context, index) {
-                                                  final filterSetting = state.filters[state.selectedFilterIndex].filterSettings[index];
-                                                  return Card(                                                    
-                                                    child: FilterSetting.buildFilterSettingWidget(filterSetting, BlocProvider.of<FilterBloc>(context))
-                                                  );
+                                                  final filterSetting = state
+                                                      .filters[state
+                                                          .selectedFilterIndex]
+                                                      .filterSettings[index];
+                                                  return Card(
+                                                      child: FilterSetting
+                                                          .buildFilterSettingWidget(
+                                                              filterSetting,
+                                                              BlocProvider.of<
+                                                                      FilterBloc>(
+                                                                  context)));
                                                 })
-                                            : Text("Keine Filtersettings vorhanden!"),
+                                            : Text(
+                                                "Keine Filtersettings vorhanden!"),
                                       ],
                                     )
                                   : Container()
@@ -279,4 +299,3 @@ class FilterView extends StatelessWidget {
     );
   }
 }
-
