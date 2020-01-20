@@ -31,4 +31,9 @@ class ImageLoadedState extends ImageState {
   const ImageLoadedState({@required this.image});
 }
 
+class ImageUploadState extends ImageState {
+  final File image;
+  const ImageUploadState({@required this.image});
+}
+
 class ImageErrorState extends ImageState {}

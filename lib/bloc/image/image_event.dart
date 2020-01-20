@@ -27,3 +27,11 @@ class LoadImage extends ImageEvent{
   List<Object> get props => [];
 
 }
+
+class SendImage extends ImageEvent{
+const SendImage();
+
+  @override
+  List<Object> get props => null;
+
+}

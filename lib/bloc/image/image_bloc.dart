@@ -44,6 +44,16 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       } catch (_) {
         yield ImageErrorState();
       }
+    } else if (event is SendImage){
+      yield ImageUploadState(image: img);
+      try {
+        String response = await imageRepository.sendImage(img);
+        //do upload
+        //img = await imageRepository.downloadImage(response);
+        yield ImageLoadedState(image: img);
+      } catch (_) {
+        yield ImageErrorState();
+      }
     }
   }
 }

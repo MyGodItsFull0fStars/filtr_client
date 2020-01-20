@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
@@ -39,5 +40,25 @@ class ImageRepository {
 
   CameraController getController() {
     return _controller;
+  }
+
+  Future<String> sendImage(File image) async {
+    List<int> imageBytes = image.readAsBytesSync();
+    String imageB64 = base64Encode(imageBytes);
+
+    String url = 'https://UNSREAPI/HASHTAGADRESSE';
+    Map<String, String> headers = {"Content-type": "application/json"};
+    String json = '{"image": $imageB64}';
+
+    Response response = await post(url, headers: headers, body: json);
+    int statusCode = response.statusCode;
+
+    return response.body;
+  }
+
+  Future<File> downloadImage(String json){
+    //decode json
+
+    //return file
   }
 }
