@@ -32,22 +32,26 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
 
         FilterSetting fs1 = new FilterSettingCheckbox(1, "Checkbox 1", true);
         FilterSetting fs2 = new FilterSettingCheckbox(2, "Checkbox 2", false);
-        FilterSetting fs3 = new FilterSettingCheckbox(1, "Checkbox 1", true);
-        FilterSetting fs4 = new FilterSettingCheckbox(2, "Checkbox 2", false);
+        FilterSetting fs3 = new FilterSettingCheckbox(1, "Checkbox 1", false);
+        FilterSetting fs4 = new FilterSettingCheckbox(2, "Checkbox 2", true);
         FilterSetting fs5 = new FilterSettingCheckbox(1, "Checkbox 1", true);
         FilterSetting fs6 = new FilterSettingCheckbox(2, "Checkbox 2", false);
+        FilterSetting fs7 = new FilterSettingSlider(1, "Slider", "", "", 0, 10, 1, 1);
+        FilterSetting fs8 = new FilterSettingSlider(1, "Slider", "", "", 0, 10, 1, 1);
 
         Filter f1= new Filter("Testfilter","https://via.placeholder.com/150");
         f1.filterSettings.add(fs1);
         f1.filterSettings.add(fs2);
+        f1.filterSettings.add(fs7);
 
         Filter f2 = new Filter("Testfilter","https://via.placeholder.com/150");
         f2.filterSettings.add(fs3);
         f2.filterSettings.add(fs4);
+        f2.filterSettings.add(fs8);
 
         Filter f3 = new Filter("Testfilter","https://via.placeholder.com/150");
-        f3.filterSettings.add(fs5);
-        f3.filterSettings.add(fs6);
+        //f3.filterSettings.add(fs5);
+        //f3.filterSettings.add(fs6);
         
         filters.add(f1);
         filters.add(f2);
@@ -68,7 +72,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         selectedFilterIndex = event.index;        
         print("Ausgewählter Index: " + selectedFilterIndex.toString());
         yield FiltersLoadedState(filters: filters, filterSettingsVisible: filterSettingsVisible, selectedFilterIndex: selectedFilterIndex,);
-    }else if(event is UpdateCheckbox){
+    }else if(event is UpdateCheckbox || event is UpdateSlider){
         yield FiltersLoadingState();
         yield FiltersLoadedState(filters: filters, filterSettingsVisible: filterSettingsVisible, selectedFilterIndex: selectedFilterIndex,);
     }

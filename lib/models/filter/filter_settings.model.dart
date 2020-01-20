@@ -18,7 +18,47 @@ class FilterSetting {
 
   static Widget buildFilterSettingWidget(FilterSetting fs, FilterBloc fb) {
     if (fs is FilterSettingSlider) {
-      return Container();
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+        Padding(
+        padding: EdgeInsets.only(left: 15, right: 25, top: 10,),
+        child: Row(
+        children: <Widget>[
+          Text(
+            fs.name,
+            style: TextStyle(
+              fontSize: 16
+            ),
+          ),
+          Expanded(
+            child: Row(),
+          ),
+          Text("Aktueller Wert: " + fs.actValue.round().toString())
+        ],
+      )),
+      Slider(
+        min: fs.minValue,
+        max: fs.maxValue,
+        onChanged: (newValue) {
+            fs.actValue = newValue;
+        },
+        onChangeEnd: (newValue) {
+          fb.add(UpdateSlider(fs: fs, actValue: newValue));
+        },
+        value: fs.actValue
+      ),
+      Padding(
+        padding: EdgeInsets.only(left: 25, right: 25, bottom: 10,),
+        child: Row(
+        children: <Widget>[
+          Text(fs.minValue.round().toString()),
+          Expanded(
+            child: Row(),
+          ),
+          Text(fs.maxValue.round().toString())
+        ],
+      ))],);
     } else if (fs is FilterSettingCheckbox) {
       return CheckboxListTile(
         title: Text(fs.name),
@@ -40,10 +80,12 @@ class FilterSettingSlider extends FilterSetting {
   double minValue;
   double maxValue;
 
+  double actValue;
+
   double steps;
 
   FilterSettingSlider(int id, String name, this.minText, this.maxText,
-      this.minValue, this.maxValue, this.steps)
+      this.minValue, this.maxValue, this.steps, this.actValue)
       : super(id, name);
 }
 
@@ -52,16 +94,6 @@ class FilterSettingCheckbox extends FilterSetting {
 
   FilterSettingCheckbox(int id, String name, this.checked) : super(id, name);
 
-  build() {
-    return Column(
-      children: <Widget>[
-        Text(name),
-        Checkbox(
-          value: checked,
-        )
-      ],
-    );
-  }
 }
 
 class FilterSettingTest extends FilterSetting {

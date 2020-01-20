@@ -40,3 +40,13 @@ class UpdateCheckbox extends FilterEvent{
   @override
   List<Object> get props => [];
 }
+
+class UpdateSlider extends FilterEvent{
+  final double actValue;
+  final FilterSettingSlider fs;
+
+  const UpdateSlider({this.fs, this.actValue});
+
+  @override
+  List<Object> get props => [];
+}

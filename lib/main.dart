@@ -132,6 +132,7 @@ class FilterView extends StatelessWidget {
                           padding: EdgeInsets.only(top: 10, bottom: 10),
                           child: Column(
                             children: <Widget>[
+                              state.filters.length > 0 ? 
                               SizedBox(
                                   height: 184,
                                   child: ListView.builder(
@@ -161,7 +162,8 @@ class FilterView extends StatelessWidget {
                                         )
                                       ]);
                                     },
-                                  )),
+                                  ) 
+                                  ) : Text("Keine Filter vorhanden!"),
                               BlocProvider.of<FilterBloc>(context)
                                           .filterSettingsVisible ==
                                       true
@@ -180,7 +182,7 @@ class FilterView extends StatelessWidget {
                                                     child: FilterSetting.buildFilterSettingWidget(filterSetting, BlocProvider.of<FilterBloc>(context))
                                                   );
                                                 })
-                                            : Text("keine Filter vorhanden"),
+                                            : Text("Keine Filtersettings vorhanden!"),
                                       ],
                                     )
                                   : Container()
