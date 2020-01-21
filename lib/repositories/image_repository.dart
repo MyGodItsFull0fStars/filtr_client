@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 
 class ImageRepository {
   ImageRepository();
-
+  int _reps = 5;
   CameraController _controller;
   CameraDescription _camera;
 
@@ -51,14 +51,41 @@ class ImageRepository {
     String json = '{"image": $imageB64}';
 
     Response response = await post(url, headers: headers, body: json);
-    //int statusCode = response.statusCode;
+    int statusCode = response.statusCode;
+
+    if (statusCode == 200) {
+      return getValueFromResponse(response.body, 'id');
+    } else if (statusCode == 500) {
+      //Service down
+    } else {
+      //Error... throw error?
+    }
 
     return response.body;
   }
 
-  /*Future<File> downloadImage(String json){
-    //decode json
+  String getValueFromResponse(String response, String value) {
+    Map<String, dynamic> json = jsonDecode(response);
+    return json[value];
+  }
 
-    //return file
-  }*/
+  Future<File> downloadImage(String id) async {
+    for (int i = 0; i < _reps; i++) {
+      Future.delayed(const Duration(milliseconds: 1000), () async {
+        String url = 'https://EXAMPLEURL/IMAGE/ID/$id';
+        Response response = await get(url);
+        int statusCode = response.statusCode;
+        String json = response.body;
+
+        if (statusCode == 200) {
+          return Image.memory(base64Decode(getValueFromResponse(json, 'b64')));
+
+        } else if (statusCode == 202) {
+          // still not finished
+        } else {
+          //Throw Error?
+        }
+      });
+    }
+  }
 }

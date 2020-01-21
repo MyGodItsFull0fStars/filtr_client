@@ -34,5 +34,9 @@ class ImageUploadState extends ImageState {
   final File image;
   const ImageUploadState({@required this.image});
 }
+class ImageProcessingState extends ImageState {
+  final File image;
+  const ImageProcessingState({@required this.image});
+}
 
 class ImageErrorState extends ImageState {}
