@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -70,22 +71,33 @@ class ImageRepository {
   }
 
   Future<File> downloadImage(String id) async {
+    String url = 'https://EXAMPLEURL/IMAGE/ID/$id';
+    int statusCode = 500;
+    String json = '';
     for (int i = 0; i < _reps; i++) {
       Future.delayed(const Duration(milliseconds: 1000), () async {
-        String url = 'https://EXAMPLEURL/IMAGE/ID/$id';
         Response response = await get(url);
-        int statusCode = response.statusCode;
-        String json = response.body;
-
-        if (statusCode == 200) {
-          return Image.memory(base64Decode(getValueFromResponse(json, 'b64')));
-
-        } else if (statusCode == 202) {
-          // still not finished
-        } else {
-          //Throw Error?
-        }
+        statusCode = response.statusCode;
+        json = response.body;
       });
+      if (statusCode == 200) {
+        return saveB64Image(base64Decode(getValueFromResponse(json, 'b64')));
+      } else if (statusCode == 202) {
+        // still not finished
+      } else {
+        //Throw Error?
+      }
     }
+    return null;
+  }
+
+  Future<File> saveB64Image(Uint8List bytes) async {
+    final path = join(
+      (await getTemporaryDirectory()).path,
+      '${DateTime.now()}.png',
+    );
+    File file = File(path);
+    await file.writeAsBytes(bytes);
+    return file;
   }
 }
