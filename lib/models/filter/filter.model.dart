@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:filter_client/models/filter/filter_settings.model.dart';
 
 class Filter{
@@ -18,7 +16,7 @@ class Filter{
     _imgURL = parsedJson["imgUrl"];
     List<FilterSetting> temp = [];
     for(int i = 0; i < parsedJson["filterSettings"].length; i++){
-        FilterSetting filterSettings = parseFilterSettings(json.decode(parsedJson["filterSettings"][i]));
+        FilterSetting filterSettings = parseFilterSettings(parsedJson["filterSettings"][i]);
         temp.add(filterSettings);
     }
     _filterSettings = temp;
