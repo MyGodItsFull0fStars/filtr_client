@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import 'package:filter_client/bloc/bloc.dart';
 import 'package:filter_client/models/filter/filter_settings.model.dart';
 import 'package:filter_client/repositories/filter_repository.dart';
@@ -34,8 +33,3 @@ void main() {
     expect("", "");
   });
 }
-=======
-void main(){
-  
-}
->>>>>>> d5b24bd72fcd7ac1825d37c4ed891b6d75e1a75d
