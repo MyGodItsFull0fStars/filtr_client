@@ -48,15 +48,15 @@ class ImageRepository {
     List<int> imageBytes = image.readAsBytesSync();
     String imageB64 = base64Encode(imageBytes);
 
-    String url = 'https://UNSREAPI/HASHTAGADRESSE';
+    String url = 'http://192.168.1.65:8080/images/process';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String json = '{"image": $imageB64}';
+    String json = '{"image": "$imageB64", "filterID": "GREYSCALE", "filterSettings":[]}';
 
     Response response = await client.post(url, headers: headers, body: json);
     int statusCode = response.statusCode;
 
     if (statusCode == 200) {
-      return getValueFromResponse(response.body, 'id');
+      return getValueFromResponse(response.body, 'imgID');
     } else if (statusCode == 500) {
       throw Exception("Service unavailable!");
     } else {
@@ -75,17 +75,20 @@ class ImageRepository {
   }
 
   Future<Uint8List> downloadImage(String id) async {
-    String url = 'https://EXAMPLEURL/IMAGE/ID/$id';
+    String url = 'http://192.168.1.65:8080/images/id/$id';
     int statusCode = 500;
     String json = '{"init":"1234"}';
     for (int i = 0; i < _reps; i++) {
       await Future.delayed(const Duration(milliseconds: 1000), () async {
+        print("Download Info: $i");
         Response response = await client.get(url);
         statusCode = response.statusCode;
         json = response.body;
+
+        print(json);
       });
       if (statusCode == 200) {
-        return base64Decode(getValueFromResponse(json, 'b64'));
+        return base64Decode(getValueFromResponse(json, 'image'));
       } else if (statusCode == 202) {
         // still not finished
       } else {

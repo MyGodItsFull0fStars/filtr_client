@@ -158,7 +158,7 @@ class FilterView extends StatelessWidget {
                       child: FloatingActionButton(
                         child: Icon(Icons.file_upload),
                         onPressed: () {
-                          //do something
+                          BlocProvider.of<ImageBloc>(context).add(SendImage());
                         },
                       ),
                     ),
