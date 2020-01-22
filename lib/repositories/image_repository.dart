@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 class ImageRepository {
   ImageRepository();
+  Client client = new Client();
   int _reps = 5;
   CameraController _controller;
   CameraDescription _camera;
@@ -51,37 +52,40 @@ class ImageRepository {
     Map<String, String> headers = {"Content-type": "application/json"};
     String json = '{"image": $imageB64}';
 
-    Response response = await post(url, headers: headers, body: json);
+    Response response = await client.post(url, headers: headers, body: json);
     int statusCode = response.statusCode;
 
     if (statusCode == 200) {
       return getValueFromResponse(response.body, 'id');
     } else if (statusCode == 500) {
-      //Service down
+      throw Exception("Service unavailable!");
     } else {
-      //Error... throw error?
+      throw Exception("Unknown Error occured during request with statuscode $statusCode!");
     }
-
-    return response.body;
   }
 
   String getValueFromResponse(String response, String value) {
     Map<String, dynamic> json = jsonDecode(response);
-    return json[value];
+    if(json.containsKey(value)){
+      return json[value].toString();
+    }
+    else{
+      throw Exception("Value $value does not exist in response!");
+    }
   }
 
-  Future<File> downloadImage(String id) async {
+  Future<Uint8List> downloadImage(String id) async {
     String url = 'https://EXAMPLEURL/IMAGE/ID/$id';
     int statusCode = 500;
-    String json = '';
+    String json = '{"init":"1234"}';
     for (int i = 0; i < _reps; i++) {
-      Future.delayed(const Duration(milliseconds: 1000), () async {
-        Response response = await get(url);
+      await Future.delayed(const Duration(milliseconds: 1000), () async {
+        Response response = await client.get(url);
         statusCode = response.statusCode;
         json = response.body;
       });
       if (statusCode == 200) {
-        return saveB64Image(base64Decode(getValueFromResponse(json, 'b64')));
+        return base64Decode(getValueFromResponse(json, 'b64'));
       } else if (statusCode == 202) {
         // still not finished
       } else {

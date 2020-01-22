@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:bloc/bloc.dart';
 import 'package:filter_client/repositories/image_repository.dart';
 import '../bloc.dart';
@@ -48,7 +49,8 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       try {
         String id = await imageRepository.sendImage(img);
         yield ImageProcessingState(image: img);
-        img = await imageRepository.downloadImage(id);
+        Uint8List bytes = await imageRepository.downloadImage(id);
+        img = await imageRepository.saveB64Image(bytes);
         yield ImageLoadedState(image: img);
       } catch (_) {
         yield ImageErrorState();
