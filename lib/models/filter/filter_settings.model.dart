@@ -92,13 +92,4 @@ class FilterSettingCheckbox extends FilterSetting {
   bool checked;
 
   FilterSettingCheckbox(int id, String name, this.checked) : super(id, name);
-
-}
-
-class FilterSettingTest extends FilterSetting {
-  FilterSettingTest(int id, String name) : super(id, name);
-
-  build() {
-    return null;
-  }
 }
