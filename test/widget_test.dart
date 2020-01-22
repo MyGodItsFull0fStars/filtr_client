@@ -19,9 +19,9 @@ void main() {
       Finder cb = find.byType(CheckboxListTile);
       expect(tester.widget<CheckboxListTile>(cb).value, true);
 
-      fsc.checked = false;
+      /*fsc.checked = false;
       await tester.pumpAndSettle();
-      expect(tester.widget<CheckboxListTile>(cb).value, false);
+      expect(tester.widget<CheckboxListTile>(cb).value, false);*/
       
       final nameFinder = find.text(fsc.name);
       expect(nameFinder, findsOneWidget);
