@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:filter_client/models/filter/filter.model.dart';
-import 'package:filter_client/models/filter/filter_settings.model.dart';
 import 'package:filter_client/repositories/filter_repository.dart';
 import 'package:meta/meta.dart';
 import '../bloc.dart';

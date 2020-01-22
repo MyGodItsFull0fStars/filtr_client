@@ -7,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
-import './models/filter/filter_settings.model.dart';
 import 'repositories/image_repository.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
