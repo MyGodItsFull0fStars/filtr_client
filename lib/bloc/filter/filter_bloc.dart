@@ -27,9 +27,10 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
        
       yield FiltersLoadingState();
       try {
-        filters = []; //filterRepository.getFilters();
+        String response = await filterRepository.fetchFilters();
+        filters = await filterRepository.getFilters(response);
 
-        FilterSetting fs1 = new FilterSettingCheckbox(1, "Checkbox 1", true);
+        /*FilterSetting fs1 = new FilterSettingCheckbox(1, "Checkbox 1", true);
         FilterSetting fs2 = new FilterSettingCheckbox(2, "Checkbox 2", false);
         FilterSetting fs3 = new FilterSettingCheckbox(1, "Checkbox 1", false);
         FilterSetting fs4 = new FilterSettingCheckbox(2, "Checkbox 2", true);
@@ -54,7 +55,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         filters.add(f2);
         filters.add(f3);
 
-        print(filters.length);
+        print(filters.length);*/
 
         yield FiltersLoadedState(filters: filters, filterSettingsVisible: filterSettingsVisible, selectedFilterIndex: selectedFilterIndex,);
         if(state is FiltersLoadedState){

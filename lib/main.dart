@@ -284,12 +284,11 @@ class FilterView extends StatelessWidget {
                                                                 .selectedFilterIndex]
                                                             .filterSettings[index];
                                                         return Card(
-                                                            child: FilterSetting
-                                                                .buildFilterSettingWidget(
-                                                                    filterSetting,
-                                                                    BlocProvider.of<
-                                                                            FilterBloc>(
-                                                                        context)));
+                                                            child: filterSetting.build(
+                                                                BlocProvider.of<
+                                                                        FilterBloc>(
+                                                                    context),
+                                                                context));
                                                       })
                                                   : Text(
                                                       "Keine Filtersettings vorhanden!"),

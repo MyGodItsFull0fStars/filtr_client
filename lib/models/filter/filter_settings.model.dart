@@ -1,78 +1,22 @@
-/*
-FilterSettingsJson
-{
-  id: ,
-  name: ,
-}
-
-*/
 import 'package:filter_client/bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
-class FilterSetting {
-  final int id;
-  String name;
+abstract class FilterSetting{
+  final int id = 0;
+  final String name = "";
 
-  FilterSetting(this.id, this.name);
-
-  static Widget buildFilterSettingWidget(FilterSetting fs, FilterBloc fb) {
-    if (fs is FilterSettingSlider) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-        Padding(
-        padding: EdgeInsets.only(left: 15, right: 25, top: 10,),
-        child: Row(
-        children: <Widget>[
-          Text(
-            fs.name,
-            style: TextStyle(
-              fontSize: 16
-            ),
-          ),
-          Expanded(
-            child: Row(),
-          ),
-          Text("Aktueller Wert: " + fs.actValue.round().toString())
-        ],
-      )),
-      Slider(
-        min: fs.minValue,
-        max: fs.maxValue,
-        onChanged: (newValue) {
-            fs.actValue = newValue;
-        },
-        onChangeEnd: (newValue) {
-          fb.add(UpdateSlider(fs: fs, actValue: newValue));
-        },
-        value: fs.actValue
-      ),
-      Padding(
-        padding: EdgeInsets.only(left: 25, right: 25, bottom: 10,),
-        child: Row(
-        children: <Widget>[
-          Text(fs.minValue.round().toString()),
-          Expanded(
-            child: Row(),
-          ),
-          Text(fs.maxValue.round().toString())
-        ],
-      ))],);
-    } else if (fs is FilterSettingCheckbox) {
-      return CheckboxListTile(
-        title: Text(fs.name),
-        onChanged: (_) {
-          fs.checked = !fs.checked;
-          fb.add(UpdateCheckbox(fs: fs, checked: fs.checked));
-        },
-        value: fs.checked,
-      );
-    }
-    return Container();
-  }
+  Widget build(FilterBloc filterBloc, BuildContext context);
 }
 
-class FilterSettingSlider extends FilterSetting {
+//########## 
+//# SLIDER #
+//##########
+
+class FilterSettingSlider implements FilterSetting {
+
+  int id;
+  String name; 
+
   String minText;
   String maxText;
 
@@ -83,13 +27,104 @@ class FilterSettingSlider extends FilterSetting {
 
   double steps;
 
-  FilterSettingSlider(int id, String name, this.minText, this.maxText,
-      this.minValue, this.maxValue, this.steps, this.actValue)
-      : super(id, name);
+  FilterSettingSlider(this.id, this.name, this.minText, this.maxText,
+      this.minValue, this.maxValue, this.steps, this.actValue);
+
+  Widget build(FilterBloc filterBloc, BuildContext context){
+    return new FilterSettingSliderWidget(this, filterBloc).build(context);
+  }
 }
 
-class FilterSettingCheckbox extends FilterSetting {
+class FilterSettingSliderWidget extends StatelessWidget{
+
+  final FilterSettingSlider filterSetting;
+  final FilterBloc filterBloc;
+
+  const FilterSettingSliderWidget(this.filterSetting, this.filterBloc);
+
+  @override
+  Widget build(BuildContext context, ) {
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+        Padding(
+        padding: EdgeInsets.only(left: 15, right: 25, top: 10,),
+        child: Row(
+        children: <Widget>[
+          Text(
+            filterSetting.name,
+            style: TextStyle(
+              fontSize: 16
+            ),
+          ),
+          Expanded(
+            child: Row(),
+          ),
+          Text("Aktueller Wert: " + filterSetting.actValue.round().toString())
+        ],
+      )),
+      Slider(
+        min: filterSetting.minValue,
+        max: filterSetting.maxValue,
+        onChanged: (newValue) {
+            filterSetting.actValue = newValue;
+        },
+        onChangeEnd: (newValue) {
+          filterBloc.add(UpdateSlider(fs: filterSetting, actValue: newValue));
+        },
+        value: filterSetting.actValue
+      ),
+      Padding(
+        padding: EdgeInsets.only(left: 25, right: 25, bottom: 10,),
+        child: Row(
+        children: <Widget>[
+          Text(filterSetting.minValue.round().toString()),
+          Expanded(
+            child: Row(),
+          ),
+          Text(filterSetting.maxValue.round().toString())
+        ],
+      ))],);
+  }  
+}
+
+
+//############ 
+//# CHECKBOX #
+//############
+
+class FilterSettingCheckbox implements FilterSetting {
+  
+  int id;
+  String name; 
   bool checked;
 
-  FilterSettingCheckbox(int id, String name, this.checked) : super(id, name);
+  FilterSettingCheckbox(this.id, this.name, this.checked);  
+
+  Widget build(FilterBloc filterBloc, BuildContext context){
+    return new FilterSettingCheckboxWidget(filterSetting: this, filterBloc: filterBloc,).build(context);
+  }
 }
+
+class FilterSettingCheckboxWidget extends StatelessWidget{
+
+  final FilterSettingCheckbox filterSetting;
+  final FilterBloc filterBloc;
+
+  const FilterSettingCheckboxWidget({this.filterSetting, this.filterBloc});
+
+  @override
+  Widget build(BuildContext context, ) {
+    return CheckboxListTile(
+        title: Text(filterSetting.name),
+        
+        onChanged: (_) {
+          filterSetting.checked = !filterSetting.checked;
+          filterBloc.add(UpdateCheckbox(fs: filterSetting, checked: filterSetting.checked));
+        },
+        value: filterSetting.checked,
+      );
+  }  
+}
+
+
