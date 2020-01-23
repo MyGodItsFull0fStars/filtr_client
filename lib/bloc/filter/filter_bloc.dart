@@ -10,7 +10,6 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   bool filterSettingsVisible = false;
   int selectedFilterIndex = -1;
   List<Filter> filters = [];
-
   
   FilterBloc({@required this.filterRepository}) 
     : assert(filterRepository != null);
