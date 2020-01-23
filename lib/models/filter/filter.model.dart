@@ -1,17 +1,20 @@
 import 'package:filter_client/models/filter/filter_settings.model.dart';
 
 class Filter{
+  String _id;
   String _name;
   String _imgURL = "";
   List<FilterSetting> _filterSettings = [];
 
   Filter(this._name, this._imgURL);
 
+  String get id => _id;
   String get name => _name;
   String get imgUrl => _imgURL;
   List<FilterSetting> get filterSettings => _filterSettings;
 
   Filter.fromJson(Map<String, dynamic> parsedJson){
+    _id = parsedJson['id'];
     _name = parsedJson["name"];
     _imgURL = parsedJson["imgUrl"];
     List<FilterSetting> temp = [];
@@ -23,18 +26,30 @@ class Filter{
   }
 
   FilterSetting parseFilterSettings(Map<String, dynamic> parsedJson){
-    FilterSetting fs;
+    FilterSetting fs = null;
 
     //Type #1: FilterSettingCheckbox
     //Type #2: 
     switch (parsedJson["type"]) {
-      case 1:
+      case "CHECKBOX":
         fs = new FilterSettingCheckbox(
                   1, 
                   parsedJson["name"], 
                   parsedJson["checked"] == "true" ? true : false
                   );
         break;
+      case "SLIDER":
+        fs = new FilterSettingSlider(
+          1,
+          parsedJson['name'],
+          parsedJson['minText'],
+          parsedJson['maxText'],
+          parsedJson['minValue'],
+          parsedJson['maxValue'],
+          parsedJson['steps'],
+          parsedJson['actValue'],
+        );
+      break;
       default:
     }
 

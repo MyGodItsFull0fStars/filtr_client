@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:filter_client/bloc/bloc.dart';
+import 'package:filter_client/bloc/statefulwrapper.dart';
 import 'package:filter_client/repositories/filter_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
@@ -197,10 +198,9 @@ class FilterView extends StatelessWidget {
                       child: BlocBuilder<FilterBloc, FilterState>(
                         builder: (context, state) {
                           if (state is InitialFiltersState) {
-                            return RaisedButton(onPressed: () async {
-                              BlocProvider.of<FilterBloc>(context)
+                            BlocProvider.of<FilterBloc>(context)
                                   .add(FetchFilter());
-                            });
+                            return Container();
                           } else if (state is FiltersLoadingState) {
                             return Padding(
                                 padding:
@@ -232,13 +232,16 @@ class FilterView extends StatelessWidget {
                                                       Card(
                                                           child:
                                                               GestureDetector(
-                                                                  child:
+                                                                  child: 
                                                                       Container(
-                                                                    child: Image
-                                                                        .network(
-                                                                            filter.imgUrl),
+                                                                        decoration: BoxDecoration(
+                                                                          image: DecorationImage(image: NetworkImage(filter.imgUrl),
+                                                                          fit: BoxFit.cover),
+                                                                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                                                                        ),                                                                    
                                                                     height: 150,
                                                                     width: 150,
+                                                                    
                                                                   ),
                                                                   onTap: () {
                                                                     BlocProvider.of<FilterBloc>(
