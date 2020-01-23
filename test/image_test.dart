@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:filter_client/bloc/bloc.dart';
+import 'package:filter_client/models/filter/filter.model.dart';
 import 'package:filter_client/repositories/image_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,7 +45,7 @@ void main() {
       });
       imageRepository.client = mc;
       final image = new File('flowers.png');
-      String value = await imageRepository.sendImage(image);
+      String value = await imageRepository.sendImage(image,new Filter("test", "test"));
       expect(value, "123");
     });
 
@@ -56,7 +57,7 @@ void main() {
       imageRepository.client = mc;
       final image = new File('flowers.png');
 
-      expect(() => imageRepository.sendImage(image), throwsException);
+      expect(() => imageRepository.sendImage(image,new Filter("test", "test")), throwsException);
     });
 
     test("downloadImage for correct response", () async {
@@ -159,13 +160,13 @@ void main() {
         ImageProcessingState(image: File("flowers.png"))
       ];
 
-      when(mic.sendImage(File("flowers.png"))).thenAnswer((_) async => null);
+      when(mic.sendImage(File("flowers.png"),null)).thenAnswer((_) async => null);
       when(mic.downloadImage(null)).thenAnswer((_) async => null);
       when(mic.saveB64Image(null)).thenAnswer((_) async => File("flowers.png"));
 
       expectLater(bloc, emitsInOrder(expectedResponse));
 
-      bloc.add(SendImage());
+      bloc.add(SendImage(null));
     });
   });
 

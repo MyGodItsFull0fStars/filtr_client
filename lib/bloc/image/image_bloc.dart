@@ -47,7 +47,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     } else if (event is SendImage){
       yield ImageUploadState(image: img);
       try {
-        String id = await imageRepository.sendImage(img);
+        String id = await imageRepository.sendImage(img,event.filter);
         yield ImageProcessingState(image: img);
         Uint8List bytes = await imageRepository.downloadImage(id);
         img = await imageRepository.saveB64Image(bytes);
