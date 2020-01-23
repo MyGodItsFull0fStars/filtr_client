@@ -32,7 +32,7 @@ class FilterSettingSlider implements FilterSetting {
       this.minValue, this.maxValue, this.steps, this.actValue);
 
   Widget build(FilterBloc filterBloc, BuildContext context){
-    return new FilterSettingSliderWidget(this, filterBloc).build(context);
+    return new FilterSettingSliderWidget(filterSetting: this, filterBloc: filterBloc,).build(context);
   }
 
   String toJson(FilterSetting fs){
@@ -50,7 +50,7 @@ class FilterSettingSliderWidget extends StatelessWidget{
   final FilterSettingSlider filterSetting;
   final FilterBloc filterBloc;
 
-  const FilterSettingSliderWidget(this.filterSetting, this.filterBloc);
+  const FilterSettingSliderWidget({this.filterSetting, this.filterBloc});
 
   @override
   Widget build(BuildContext context, ) {

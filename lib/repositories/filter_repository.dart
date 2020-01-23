@@ -8,7 +8,7 @@ class FilterRepository {
   FilterRepository();
 
   Future<String> fetchFilters() async {
-    String url = 'http://www.leustik.com/filter/json.txt';
+    String url = 'http://hackerman.sh:13377/filters';
     
         Response response = await get(url);
         int statusCode = response.statusCode;
