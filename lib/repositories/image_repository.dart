@@ -49,7 +49,6 @@ class ImageRepository {
     List<int> imageBytes = image.readAsBytesSync();
     String imageB64 = base64Encode(imageBytes);
     String fjson = filter.toJson(filter);
-    print(fjson);
     String url = 'http://hackerman.sh:13377/images/process';
     Map<String, String> headers = {"Content-type": "application/json"};
     String json = '{"image": "$imageB64", $fjson}';

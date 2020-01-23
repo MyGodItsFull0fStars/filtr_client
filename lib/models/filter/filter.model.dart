@@ -26,7 +26,7 @@ class Filter{
   }
 
   FilterSetting parseFilterSettings(Map<String, dynamic> parsedJson){
-    FilterSetting fs = null;
+    FilterSetting fs;
 
     //Type #1: FilterSettingCheckbox
     //Type #2: 
@@ -58,8 +58,14 @@ class Filter{
 
   String toJson(Filter filter){
     String json = "";
-    json += '"filterID": "'+filter.name+'", ';
-    json += '"filterSettings": '+filter._filterSettings.toString();
+    json += '"filterID": "'+filter._id+'", ';
+    json += '"filterSettings": [';
+
+    for(FilterSetting fs in filter.filterSettings){
+        json += fs.toJson(fs);
+    }
+
+    json += ']';
     return json;
   }
 }

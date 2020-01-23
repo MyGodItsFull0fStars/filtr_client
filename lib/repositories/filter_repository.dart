@@ -11,7 +11,6 @@ class FilterRepository {
     String url = 'http://www.leustik.com/filter/json.txt';
     
         Response response = await get(url);
-        print(response.body);
         int statusCode = response.statusCode;
         String json = response.body;
       if (statusCode == 200) {

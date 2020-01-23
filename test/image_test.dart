@@ -30,6 +30,8 @@ void main() {
     return response;
   });
 
+  Filter filter = Filter.fromJson(json.decode('{"id": "GREYSCALE", "name": "Greyscale", "imgUrl": "https://qph.fs.quoracdn.net/main-qimg-28267274974ef4445d4e0464e2d382f1.webp", "filterSettings": []}'));
+
   setUp(() {
     setMockPathProviderPlatform(FakePlatform(operatingSystem: 'android'));
     imageRepository = new ImageRepository();
@@ -45,7 +47,7 @@ void main() {
       });
       imageRepository.client = mc;
       final image = new File('flowers.png');
-      String value = await imageRepository.sendImage(image,new Filter("test", "test"));
+      String value = await imageRepository.sendImage(image,filter);
       expect(value, "123");
     });
 
@@ -57,7 +59,7 @@ void main() {
       imageRepository.client = mc;
       final image = new File('flowers.png');
 
-      expect(() => imageRepository.sendImage(image,new Filter("test", "test")), throwsException);
+      expect(() => imageRepository.sendImage(image, filter), throwsException);
     });
 
     test("downloadImage for correct response", () async {

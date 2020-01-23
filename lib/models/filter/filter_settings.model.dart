@@ -6,6 +6,7 @@ abstract class FilterSetting{
   final String name = "";
 
   Widget build(FilterBloc filterBloc, BuildContext context);
+  String toJson(FilterSetting fs);
 }
 
 //########## 
@@ -32,6 +33,15 @@ class FilterSettingSlider implements FilterSetting {
 
   Widget build(FilterBloc filterBloc, BuildContext context){
     return new FilterSettingSliderWidget(this, filterBloc).build(context);
+  }
+
+  String toJson(FilterSetting fs){
+    String json = "";
+    json += '{';
+    json += '"name": "' + name + '", ';
+    json += '"actValue": "' + actValue.toString() + '", ';
+    json += '},';
+    return json;
   }
 }
 
@@ -103,6 +113,15 @@ class FilterSettingCheckbox implements FilterSetting {
 
   Widget build(FilterBloc filterBloc, BuildContext context){
     return new FilterSettingCheckboxWidget(filterSetting: this, filterBloc: filterBloc,).build(context);
+  }
+
+  String toJson(FilterSetting fs){
+    String json = "";
+    json += '{';
+    json += '"name": "' + name + '", ';
+    json += '"checked": "' + checked.toString() + '"';
+    json += '},';
+    return json;
   }
 }
 

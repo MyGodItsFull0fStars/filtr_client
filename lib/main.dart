@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:filter_client/bloc/bloc.dart';
-import 'package:filter_client/bloc/statefulwrapper.dart';
 import 'package:filter_client/repositories/filter_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
