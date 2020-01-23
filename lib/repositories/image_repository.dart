@@ -80,12 +80,9 @@ class ImageRepository {
     String json = '{"init":"1234"}';
     for (int i = 0; i < _reps; i++) {
       await Future.delayed(const Duration(milliseconds: 1000), () async {
-        print("Download Info: $i");
         Response response = await client.get(url);
         statusCode = response.statusCode;
         json = response.body;
-
-        print(json);
       });
       if (statusCode == 200) {
         return base64Decode(getValueFromResponse(json, 'image'));

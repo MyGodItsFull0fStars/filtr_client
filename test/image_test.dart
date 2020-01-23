@@ -39,7 +39,7 @@ void main() {
   group("http requests", () {
     test("sendImage for correct response", () async {
       MockClient mc = MockClient((request) async {
-        final mapJson = {'id': 123};
+        final mapJson = {'imgID': 123};
         return Response(jsonEncode(mapJson), 200);
       });
       imageRepository.client = mc;
@@ -50,7 +50,7 @@ void main() {
 
     test("sendImage for service unavailable", () async {
       MockClient mc = MockClient((request) async {
-        final mapJson = {'id': 123};
+        final mapJson = {'imgID': 123};
         return Response(jsonEncode(mapJson), 500);
       });
       imageRepository.client = mc;
@@ -64,7 +64,7 @@ void main() {
       List<int> imageBytes = image.readAsBytesSync();
       String imageB64 = base64Encode(imageBytes);
       MockClient mc = MockClient((request) async {
-        final mapJson = {'b64': imageB64};
+        final mapJson = {'image': imageB64};
         return Response(jsonEncode(mapJson), 200);
       });
       imageRepository.client = mc;
@@ -78,7 +78,7 @@ void main() {
       List<int> imageBytes = image.readAsBytesSync();
       String imageB64 = base64Encode(imageBytes);
       MockClient mc = MockClient((request) async {
-        final mapJson = {'b64': imageB64};
+        final mapJson = {'image': imageB64};
         return Response(jsonEncode(mapJson), 202);
       });
       imageRepository.client = mc;
