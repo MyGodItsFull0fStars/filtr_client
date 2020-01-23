@@ -55,4 +55,11 @@ class Filter{
 
     return fs;
   }
+
+  String toJson(Filter filter){
+    String json = "";
+    json += '"filterID": "'+filter.name+'", ';
+    json += '"filterSettings": '+filter._filterSettings.toString();
+    return json;
+  }
 }

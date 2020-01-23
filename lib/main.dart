@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
+import 'models/filter/filter.model.dart';
 import 'repositories/image_repository.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
@@ -109,6 +110,10 @@ class FilterView extends StatelessWidget {
                         aspectRatio: state.controller.value.aspectRatio,
                         child: CameraPreview(state.controller),
                       ));
+                } else if (state is ImageUploadState) {
+                  return Text("Uploading Image");
+                } else if (state is ImageProcessingState) {
+                  return Text("Image is Processing on server");
                 } else {
                   return Text("No Image");
                 }
@@ -158,7 +163,9 @@ class FilterView extends StatelessWidget {
                       child: FloatingActionButton(
                         child: Icon(Icons.file_upload),
                         onPressed: () {
-                          BlocProvider.of<ImageBloc>(context).add(SendImage());
+                          int chosen = BlocProvider.of<FilterBloc>(context).selectedFilterIndex;
+                          Filter filter = BlocProvider.of<FilterBloc>(context).filters[chosen];
+                          BlocProvider.of<ImageBloc>(context).add(SendImage(filter));
                         },
                       ),
                     ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:filter_client/bloc/bloc.dart';
+import 'package:filter_client/models/filter/filter.model.dart';
 import 'package:filter_client/repositories/image_repository.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -39,24 +40,24 @@ void main() {
   group("http requests", () {
     test("sendImage for correct response", () async {
       MockClient mc = MockClient((request) async {
-        final mapJson = {'id': 123};
+        final mapJson = {'imgID': 123};
         return Response(jsonEncode(mapJson), 200);
       });
       imageRepository.client = mc;
       final image = new File('flowers.png');
-      String value = await imageRepository.sendImage(image);
+      String value = await imageRepository.sendImage(image,new Filter("test", "test"));
       expect(value, "123");
     });
 
     test("sendImage for service unavailable", () async {
       MockClient mc = MockClient((request) async {
-        final mapJson = {'id': 123};
+        final mapJson = {'imgID': 123};
         return Response(jsonEncode(mapJson), 500);
       });
       imageRepository.client = mc;
       final image = new File('flowers.png');
 
-      expect(() => imageRepository.sendImage(image), throwsException);
+      expect(() => imageRepository.sendImage(image,new Filter("test", "test")), throwsException);
     });
 
     test("downloadImage for correct response", () async {
@@ -64,7 +65,7 @@ void main() {
       List<int> imageBytes = image.readAsBytesSync();
       String imageB64 = base64Encode(imageBytes);
       MockClient mc = MockClient((request) async {
-        final mapJson = {'b64': imageB64};
+        final mapJson = {'image': imageB64};
         return Response(jsonEncode(mapJson), 200);
       });
       imageRepository.client = mc;
@@ -78,7 +79,7 @@ void main() {
       List<int> imageBytes = image.readAsBytesSync();
       String imageB64 = base64Encode(imageBytes);
       MockClient mc = MockClient((request) async {
-        final mapJson = {'b64': imageB64};
+        final mapJson = {'image': imageB64};
         return Response(jsonEncode(mapJson), 202);
       });
       imageRepository.client = mc;
@@ -159,13 +160,13 @@ void main() {
         ImageProcessingState(image: File("flowers.png"))
       ];
 
-      when(mic.sendImage(File("flowers.png"))).thenAnswer((_) async => null);
+      when(mic.sendImage(File("flowers.png"),null)).thenAnswer((_) async => null);
       when(mic.downloadImage(null)).thenAnswer((_) async => null);
       when(mic.saveB64Image(null)).thenAnswer((_) async => File("flowers.png"));
 
       expectLater(bloc, emitsInOrder(expectedResponse));
 
-      bloc.add(SendImage());
+      bloc.add(SendImage(null));
     });
   });
 

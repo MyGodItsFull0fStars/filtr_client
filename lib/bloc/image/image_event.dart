@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:filter_client/models/filter/filter.model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -29,7 +30,8 @@ class LoadImage extends ImageEvent{
 }
 
 class SendImage extends ImageEvent{
-const SendImage();
+ final Filter filter;
+const SendImage(this.filter);
 
   @override
   List<Object> get props => null;

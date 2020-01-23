@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
+import 'package:filter_client/models/filter/filter.model.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
@@ -44,13 +45,14 @@ class ImageRepository {
     return _controller;
   }
 
-  Future<String> sendImage(File image) async {
+  Future<String> sendImage(File image, Filter filter) async {
     List<int> imageBytes = image.readAsBytesSync();
     String imageB64 = base64Encode(imageBytes);
-
-    String url = 'http://192.168.1.65:8080/images/process';
+    String fjson = filter.toJson(filter);
+    print(fjson);
+    String url = 'http://hackerman.sh:13377/images/process';
     Map<String, String> headers = {"Content-type": "application/json"};
-    String json = '{"image": "$imageB64", "filterID": "GREYSCALE", "filterSettings":[]}';
+    String json = '{"image": "$imageB64", $fjson}';
 
     Response response = await client.post(url, headers: headers, body: json);
     int statusCode = response.statusCode;
@@ -75,17 +77,14 @@ class ImageRepository {
   }
 
   Future<Uint8List> downloadImage(String id) async {
-    String url = 'http://192.168.1.65:8080/images/id/$id';
+    String url = 'http://hackerman.sh:13377/images/id/$id';
     int statusCode = 500;
     String json = '{"init":"1234"}';
     for (int i = 0; i < _reps; i++) {
       await Future.delayed(const Duration(milliseconds: 1000), () async {
-        print("Download Info: $i");
         Response response = await client.get(url);
         statusCode = response.statusCode;
         json = response.body;
-
-        print(json);
       });
       if (statusCode == 200) {
         return base64Decode(getValueFromResponse(json, 'image'));
